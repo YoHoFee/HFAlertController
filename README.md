@@ -5,7 +5,11 @@
 ##一、环境支持
 * Xcode 8 或 更高
 * iOS 8 或 更高
-* 支持Swift3.0
+* 支持Swift3.0、Objective-C
+
+**如果需要在Objective-C中使用，请点击[此处](http://some-url.com)，按步骤设置Xcode即可正常调用，在Objective-C中方法名不变。**
+    
+
 
 ##二、使用
 
