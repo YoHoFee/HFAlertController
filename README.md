@@ -1,8 +1,16 @@
 # HFAlertController 
+**v3.0.1**
 
 > HFAlertController是对UIAlertController做的简单封装，将原生方法以常用的方式开放，简化弹窗的过程，并且支持背景点击取消（HFAlertController就是为了背景点击取消而生的），目前仅开发Swift3.0版本，如有需要Swift2.2版可联系我获取，谢谢大家支持！
 
-##一、环境支持
+## 目录
+
+* [1.环境要求](#1)
+* [2.使用](#2)
+* [3.许可](#3)
+
+
+<h2 id = "1">一、环境要求</h2>
 * Xcode 8 或 更高
 * iOS 8 或 更高
 * 支持Swift3.0、Objective-C
@@ -10,8 +18,7 @@
 **如果需要在Objective-C中使用，请点击[此处](http://some-url.com)查看设置方式，按步骤设置Xcode即可正常调用，在Objective-C中方法名不变。**
     
 
-
-##二、使用
+<h2 id = "2">二、使用</h2>
 
 **1.直接弹出默认弹框或底部弹框**
 
@@ -61,7 +68,7 @@ alertController.addAction(cancelAction)
 self.present(alertController, animated: true, completion: nil)
 ```
 
-##三、许可
+<h2 id = "3">三、许可</h2>
 
 **此项目为开源项目，允许任何人免费使用并提出宝贵的意见，本项目仅限学习交流，不得用于商业用途，如因本项目引发任何损失，作者不承担任何法律责任。**
 
