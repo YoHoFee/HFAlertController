@@ -6,19 +6,24 @@
 ## 目录
 
 * [1.环境要求](#1)
-* [2.使用](#2)
-* [3.许可](#3)
+* [2.安装](#2)
+* [3.使用](#3)
+* [4.许可](#4)
 
 
 <h2 id = "1">一、环境要求</h2>
-* Xcode 8 或 更高
-* iOS 8 或 更高
-* 支持Swift3.0、Objective-C
+* Xcode 8.1 或 更高
+* iOS 8     或 更高
+* Swift3.0  或 更高
+* Objective-C
 
-**如果需要在Objective-C中使用，请点击[此处](http://some-url.com)查看设置方式，按步骤设置Xcode即可正常调用，在Objective-C中方法名不变。**
     
+<h2 id = "2">二、安装</h2>
 
-<h2 id = "2">二、使用</h2>
+**将HFAlertController.swift文件拖入项目目录即可使用。**
+**如果需要在Objective-C中使用，请点击[此处](http://some-url.com)查看设置方式，按步骤设置Xcode即可正常调用，在Objective-C中方法名不变。**
+
+<h2 id = "3">三、使用</h2>
 
 **1.直接弹出默认弹框或底部弹框**
 
@@ -68,7 +73,7 @@ alertController.addAction(cancelAction)
 self.present(alertController, animated: true, completion: nil)
 ```
 
-<h2 id = "3">三、许可</h2>
+<h2 id = "4">四、许可</h2>
 
 **此项目为开源项目，允许任何人免费使用并提出宝贵的意见，本项目仅限学习交流，不得用于商业用途，如因本项目引发任何损失，作者不承担任何法律责任。**
 
