@@ -61,3 +61,9 @@ alertController.addAction(cancelAction)
 self.present(alertController, animated: true, completion: nil)
 ```
 
+##三、许可
+
+**此项目为开源项目，允许任何人免费使用并提出宝贵的意见，本项目仅限学习交流，不得用于商业用途，如因本项目引发任何损失，作者不承担任何法律责任。**
+
+
+

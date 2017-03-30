@@ -34,7 +34,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         controller.present(obj, animated: true, completion: nil)
     }
     
-    /// 弹出默认弹窗
+    /// 弹出底部弹窗
     ///
     /// - Parameters:
     ///   - controller: 主控制器（一般是self）
