@@ -19,7 +19,8 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     var newLeftView:    HFAlertBkView?
     /// 右边蒙版
     var newRightView:   HFAlertBkView?
-    
+    /// 是否允许取消
+    var isAllowedCancel: Bool = true
     
     
     /// 弹出默认弹窗
@@ -34,7 +35,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         controller.present(obj, animated: true, completion: nil)
     }
     
-    /// 弹出底部弹窗
+    /// 弹出默认弹窗
     ///
     /// - Parameters:
     ///   - controller: 主控制器（一般是self）
@@ -43,6 +44,18 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - yesCallBack: 确定按钮回调
     class func showSheetAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
         let obj = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,yesCallBack: yesCallBack)
+        controller.present(obj, animated: true, completion: nil)
+    }
+    
+    /// 弹出默认弹窗
+    ///
+    /// - Parameters:
+    ///   - controller: 主控制器（一般是self）
+    ///   - title: 标题文本
+    ///   - message: 弹窗内容
+    ///   - yesCallBack: 确定按钮回调
+    class func showOneBtnAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
+        let obj = HFAlertController.oneBtnAlertController(title: title, message: message, yesCallBack: yesCallBack)
         controller.present(obj, animated: true, completion: nil)
     }
     
@@ -108,7 +121,8 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
                 yesCallBack!()
             }
         }
-        obj.addAction(yesAction)        
+        obj.addAction(yesAction)
+        obj.isAllowedCancel = false
         return obj
     }
     
@@ -155,7 +169,9 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
      蒙版点击回调
      */
     func touchCallBack() {
-        self.dismiss(animated: true, completion: nil)
+        if self.isAllowedCancel == true {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
 }
