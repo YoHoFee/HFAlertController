@@ -19,7 +19,8 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     var newLeftView:    HFAlertBkView?
     /// 右边蒙版
     var newRightView:   HFAlertBkView?
-    
+    /// 是否允许取消
+    var isAllowedCancel: Bool = true
     
     
     /// 弹出默认弹窗
@@ -29,37 +30,56 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - title: 标题文本
     ///   - message: 弹窗内容
     ///   - yesCallBack: 确定按钮回调
-    class func showAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
-        let obj = HFAlertController.alertController(title: title, message: message, yesCallBack: yesCallBack)
+    class func showAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?, cancelCallBack:((Void) -> Void)?) {
+        let obj = HFAlertController.alertController(title: title, message: message, yesCallBack: yesCallBack, cancelCallBack:cancelCallBack)
         controller.present(obj, animated: true, completion: nil)
     }
     
-    /// 弹出默认弹窗
+    /// 弹出底部弹窗
     ///
     /// - Parameters:
     ///   - controller: 主控制器（一般是self）
     ///   - title: 标题文本
     ///   - message: 弹窗内容
     ///   - yesCallBack: 确定按钮回调
-    class func showSheetAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
-        let obj = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,yesCallBack: yesCallBack)
+    class func showSheetAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?, cancelCallBack:((Void) -> Void)?) {
+        let obj = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,yesCallBack: yesCallBack,cancelCallBack:cancelCallBack)
+        controller.present(obj, animated: true, completion: nil)
+    }
+    
+    /// 弹出单按钮弹窗
+    ///
+    /// - Parameters:
+    ///   - controller: 主控制器（一般是self）
+    ///   - title: 标题文本
+    ///   - message: 弹窗内容
+    ///   - yesCallBack: 确定按钮回调
+    class func showOneBtnAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
+        let obj = HFAlertController.oneBtnAlertController(title: title, message: message, yesCallBack: yesCallBack)
         controller.present(obj, animated: true, completion: nil)
     }
     
     /**
-     默认的弹出窗
+     创建默认的弹出窗
      
      - parameter yesCallBack: yesCallBack description
      
      - returns: return value description
      */
-    class func alertController(title: String, message: String, preferredStyle: UIAlertControllerStyle = .alert, yesCallBack:((Void) -> Void)?) -> HFAlertController {
+    class func alertController(title: String, message: String, preferredStyle: UIAlertControllerStyle = .alert, yesCallBack:((Void) -> Void)?,cancelCallBack:((Void) -> Void)?) -> HFAlertController {
         
         let obj = HFAlertController(title: title, message: message, preferredStyle: preferredStyle)
-        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel) { (_) in
+            obj.touchCallBack()
+            if cancelCallBack != nil {
+                cancelCallBack!()
+            }
+        }
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
             if yesCallBack != nil {
                 yesCallBack!()
+            }else {
+                obj.touchCallBack()
             }
         }
         obj.addAction(yesAction)
@@ -77,13 +97,20 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - yesBtnTitle: 确定按钮文本
     ///   - yesCallBack: 确定按钮回调
     /// - Returns: return value description
-    class func alertController(title: String, message: String, yesBtnTitle: String, yesCallBack:((Void) -> Void)?) -> HFAlertController {
+    class func alertController(title: String, message: String, yesBtnTitle: String, yesCallBack:((Void) -> Void)?,cancelCallBack:((Void) -> Void)?) -> HFAlertController {
         
         let obj = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel) { (_) in
+            obj.touchCallBack()
+            if cancelCallBack != nil {
+                cancelCallBack!()
+            }
+        }
         let yesAction = UIAlertAction(title: yesBtnTitle, style: UIAlertActionStyle.default) { (_) in
             if yesCallBack != nil {
                 yesCallBack!()
+            }else {
+                obj.touchCallBack()
             }
         }
         obj.addAction(yesAction)
@@ -106,9 +133,12 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
             if yesCallBack != nil {
                 yesCallBack!()
+            }else {
+                obj.touchCallBack()
             }
         }
-        obj.addAction(yesAction)        
+        obj.addAction(yesAction)
+        obj.isAllowedCancel = false
         return obj
     }
     
@@ -130,7 +160,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     /**
      布局与设置蒙版
      */
-    func layoutNewbackgroundView(bkView: UIView) {
+    private func layoutNewbackgroundView(bkView: UIView) {
         
         newBottonView   = HFAlertBkView(delegate: self)
         newTopView      = HFAlertBkView(delegate: self)
@@ -142,7 +172,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         bkView.addSubview(newLeftView!)
         bkView.addSubview(newRightView!)
         
-
+        
         newBottonView!.frame     = CGRect.init(x: 0, y: self.view.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height-self.view.frame.maxY)
         newTopView!.frame        = CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: self.view.frame.origin.y)
         newLeftView!.frame       = CGRect(x:0, y:self.view.frame.origin.y,width: self.view.frame.origin.x, height:self.view.frame.size.height)
@@ -154,8 +184,23 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     /**
      蒙版点击回调
      */
-    func touchCallBack() {
-        self.dismiss(animated: true, completion: nil)
+    internal func touchCallBack() {
+        if self.isAllowedCancel == true {
+            self.dismiss(animated: true, completion: nil)
+            self.removeAllMasking()
+        }
+    }
+    
+    /// 移除所有蒙版
+    private func removeAllMasking() {
+        self.newTopView?.removeFromSuperview()
+        self.newLeftView?.removeFromSuperview()
+        self.newRightView?.removeFromSuperview()
+        self.newBottonView?.removeFromSuperview()
+        self.newTopView = nil
+        self.newLeftView = nil
+        self.newRightView = nil
+        self.newBottonView = nil
     }
     
 }
