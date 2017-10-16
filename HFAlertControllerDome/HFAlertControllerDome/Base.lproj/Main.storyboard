@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -29,14 +29,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sw6-oj-tQH">
-                                <rect key="frame" x="131.5" y="323.5" width="112" height="30"/>
+                                <rect key="frame" x="131" y="323.5" width="113" height="30"/>
                                 <state key="normal" title="底部弹窗(Sheet)"/>
                                 <connections>
                                     <action selector="clickOnButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vOo-OE-0hT"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HFAlertController" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1C-1l-lIk">
-                                <rect key="frame" x="74.5" y="132.5" width="227.5" height="36"/>
+                                <rect key="frame" x="76" y="132.5" width="223" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -48,16 +48,25 @@
                                     <action selector="clickOnButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="o59-59-hru"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dai-0c-52X">
+                                <rect key="frame" x="149" y="433.5" width="77" height="30"/>
+                                <state key="normal" title="自定义弹窗"/>
+                                <connections>
+                                    <action selector="clickOnButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NEM-SZ-HSK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="HEh-Qz-31f" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BVU-J4-a2N"/>
+                            <constraint firstItem="dai-0c-52X" firstAttribute="top" secondItem="HEh-Qz-31f" secondAttribute="bottom" constant="25" id="Dj9-DL-5Hw"/>
                             <constraint firstItem="skv-je-TEz" firstAttribute="top" secondItem="C1C-1l-lIk" secondAttribute="bottom" constant="100" id="Gkc-gC-0IH"/>
                             <constraint firstItem="sw6-oj-tQH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JfO-Nh-dPw"/>
                             <constraint firstItem="sw6-oj-tQH" firstAttribute="top" secondItem="skv-je-TEz" secondAttribute="bottom" constant="25" id="Q5U-a0-qZS"/>
                             <constraint firstItem="skv-je-TEz" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-50" id="TOD-Tr-Inu"/>
                             <constraint firstItem="HEh-Qz-31f" firstAttribute="top" secondItem="sw6-oj-tQH" secondAttribute="bottom" constant="25" id="rSr-Z7-ZqQ"/>
                             <constraint firstItem="skv-je-TEz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="smg-Ff-doV"/>
+                            <constraint firstItem="dai-0c-52X" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wZl-5Z-vmL"/>
                             <constraint firstItem="C1C-1l-lIk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="x2c-4t-Yuf"/>
                         </constraints>
                     </view>

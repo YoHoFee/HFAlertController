@@ -8,84 +8,132 @@
 
 import UIKit
 
+
+/// 弹窗类型枚举
+///
+/// - Default: 默认弹窗
+/// - ActionSheet: 底部弹窗
+/// - OnlyConfirm: 只可确认的默认弹窗
+@objc enum HFAlertType: Int {
+    
+    case Default
+    
+    case ActionSheet
+    
+    case OnlyConfirm
+    
+}
+
+/// 弹出动画枚举
+///
+/// - System: 仿系统弹出样式（默认）
+/// - Elasticity: 弹力样式
+@objc enum HFAlertAnimationOption: Int {
+    
+    case System
+    
+    case Elasticity
+    
+}
+
 /// 对系统弹窗控制器进行封装，实现背景点击返回
 class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     
+    
+    /// 当前显示的控制器
+    fileprivate class var currentDisplayViewController: UIViewController? {
+        get{ return HFAlertController.currentViewController() }
+    }
+    fileprivate var currentDisplayViewControllerCache: UIViewController?
     /// 底部蒙版
-    var newBottonView:  HFAlertBkView?
+    fileprivate var newBottonView:  HFAlertBkView?
     /// 头部蒙版
-    var newTopView:     HFAlertBkView?
+    fileprivate var newTopView:     HFAlertBkView?
     /// 左边蒙版
-    var newLeftView:    HFAlertBkView?
+    fileprivate var newLeftView:    HFAlertBkView?
     /// 右边蒙版
-    var newRightView:   HFAlertBkView?
+    fileprivate var newRightView:   HFAlertBkView?
     /// 是否允许取消
-    var isAllowedCancel: Bool = true
+    fileprivate var isAllowedCancel: Bool = true
     
     
-    /// 弹出默认弹窗
+
+    
+    /// 弹出自定义弹窗
     ///
     /// - Parameters:
-    ///   - controller: 主控制器（一般是self）
-    ///   - title: 标题文本
-    ///   - message: 弹窗内容
-    ///   - yesCallBack: 确定按钮回调
-    class func showAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?, cancelCallBack:((Void) -> Void)?) {
-        let obj = HFAlertController.alertController(title: title, message: message, yesCallBack: yesCallBack, cancelCallBack:cancelCallBack)
-        controller.present(obj, animated: true, completion: nil)
-    }
-    
-    /// 弹出底部弹窗
-    ///
-    /// - Parameters:
-    ///   - controller: 主控制器（一般是self）
-    ///   - title: 标题文本
-    ///   - message: 弹窗内容
-    ///   - yesCallBack: 确定按钮回调
-    class func showSheetAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?, cancelCallBack:((Void) -> Void)?) {
-        let obj = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,yesCallBack: yesCallBack,cancelCallBack:cancelCallBack)
-        controller.present(obj, animated: true, completion: nil)
-    }
-    
-    /// 弹出单按钮弹窗
-    ///
-    /// - Parameters:
-    ///   - controller: 主控制器（一般是self）
-    ///   - title: 标题文本
-    ///   - message: 弹窗内容
-    ///   - yesCallBack: 确定按钮回调
-    class func showOneBtnAlertController(controller: UIViewController, title: String, message: String, yesCallBack:((Void) -> Void)?) {
-        let obj = HFAlertController.oneBtnAlertController(title: title, message: message, yesCallBack: yesCallBack)
-        controller.present(obj, animated: true, completion: nil)
-    }
-    
-    /**
-     创建默认的弹出窗
-     
-     - parameter yesCallBack: yesCallBack description
-     
-     - returns: return value description
-     */
-    class func alertController(title: String, message: String, preferredStyle: UIAlertControllerStyle = .alert, yesCallBack:((Void) -> Void)?,cancelCallBack:((Void) -> Void)?) -> HFAlertController {
+    ///   - view: 需要弹出的View
+    ///   - type: 提示框类型
+    open class func showCustomView(view: UIView,type: HFAlertType? = .Default) {
         
-        let obj = HFAlertController(title: title, message: message, preferredStyle: preferredStyle)
-        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel) { (_) in
-            obj.touchCallBack()
-            if cancelCallBack != nil {
-                cancelCallBack!()
-            }
+        if let windouw = UIApplication.shared.keyWindow {
+            
+            let bkView = HFAlertBkView.fullBackground()
+            bkView.addSubview(view)
+            bkView.alpha = 0
+            windouw.addSubview(bkView)
+            HFAlertController.alertAnimation(view: view, animation: .System)
+            UIView.animate(withDuration: 0.25, animations: {
+                bkView.alpha = 1
+            })
         }
+        
+    }
+    
+    
+    /// 弹出默认提示框
+    ///
+    /// - Parameters:
+    ///   - type: 提示框类型
+    ///   - title: 提示框标题
+    ///   - message: 提示框内容
+    ///   - ConfirmCallBack: 完成回调
+    @discardableResult
+    open class func showAlert(type:HFAlertType? = .Default, title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
+        
+        var alertController: HFAlertController
+        
+        switch type! {
+        case HFAlertType.Default:
+            alertController = HFAlertController.alertController(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+        case HFAlertType.ActionSheet:
+            alertController = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,ConfirmCallBack: ConfirmCallBack)
+        case HFAlertType.OnlyConfirm:
+            alertController = HFAlertController.oneBtnAlertController(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+        }
+        
+        if self.currentDisplayViewController != nil {
+            self.currentDisplayViewController!.present(alertController, animated: true, completion: nil)
+        }else {
+            print("HFAlertController_ErrerMsg = ”当前没有可用的视图控制器可供弹出，请检查视图层级“")
+        }
+        
+        return alertController
+    }
+
+    
+    
+    /// 创建一个默认的提示框
+    ///
+    /// - Parameters:
+    ///   - title: 标题
+    ///   - message: 内容文本
+    ///   - preferredStyle: 提示框类型
+    ///   - ConfirmCallBack: 确定按钮回调
+    /// - Returns: 一个默认的提示框
+    open class func alertController(title: String, message: String, preferredStyle: UIAlertControllerStyle = .alert, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
+        
+        let alertController = HFAlertController(title: title, message: message, preferredStyle: preferredStyle)
+        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: nil)
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
-            if yesCallBack != nil {
-                yesCallBack!()
-            }else {
-                obj.touchCallBack()
+            if ConfirmCallBack != nil {
+                ConfirmCallBack!()
             }
         }
-        obj.addAction(yesAction)
-        obj.addAction(cancelAction)
+        alertController.addAction(yesAction)
+        alertController.addAction(cancelAction)
         
-        return obj
+        return alertController
     }
     
     
@@ -95,28 +143,21 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - title: 标题文本
     ///   - message: 弹窗内容
     ///   - yesBtnTitle: 确定按钮文本
-    ///   - yesCallBack: 确定按钮回调
+    ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    class func alertController(title: String, message: String, yesBtnTitle: String, yesCallBack:((Void) -> Void)?,cancelCallBack:((Void) -> Void)?) -> HFAlertController {
+    open class func alertController(title: String, message: String, yesBtnTitle: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
         
-        let obj = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel) { (_) in
-            obj.touchCallBack()
-            if cancelCallBack != nil {
-                cancelCallBack!()
-            }
-        }
+        let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: nil)
         let yesAction = UIAlertAction(title: yesBtnTitle, style: UIAlertActionStyle.default) { (_) in
-            if yesCallBack != nil {
-                yesCallBack!()
-            }else {
-                obj.touchCallBack()
+            if ConfirmCallBack != nil {
+                ConfirmCallBack!()
             }
         }
-        obj.addAction(yesAction)
-        obj.addAction(cancelAction)
+        alertController.addAction(yesAction)
+        alertController.addAction(cancelAction)
         
-        return obj
+        return alertController
     }
     
     
@@ -125,28 +166,43 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     /// - Parameters:
     ///   - title: 标题文本
     ///   - message: 弹框内容
-    ///   - yesCallBack: 确定按钮回调
+    ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    class func oneBtnAlertController(title: String, message: String, yesCallBack:((Void) -> Void)?) -> HFAlertController {
+    open class func oneBtnAlertController(title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
         
-        let obj = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
-            if yesCallBack != nil {
-                yesCallBack!()
-            }else {
-                obj.touchCallBack()
+            if ConfirmCallBack != nil {
+                ConfirmCallBack!()
             }
         }
-        obj.addAction(yesAction)
-        obj.isAllowedCancel = false
-        return obj
+        alertController.addAction(yesAction)
+        alertController.isAllowedCancel = false
+        return alertController
     }
     
     
+    /// 获取当前显示的控制器
+    ///
+    /// - Parameter base: 基控制器
+    /// - Returns: 当前显示的控制器
+    fileprivate class func currentViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return currentViewController(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return currentViewController(base: tab.selectedViewController)
+        }
+        if let presented = base?.presentedViewController {
+            return currentViewController(base: presented)
+        }
+        return base
+    }
     
-    /**
-     仅在此方法中可获取AlertView的大小
-     */
+
+    /// 仅在此方法中可获取AlertView的大小
+    ///
+    /// - Parameter animated: -
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -157,10 +213,10 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     }
     
     
-    /**
-     布局与设置蒙版
-     */
-    private func layoutNewbackgroundView(bkView: UIView) {
+    /// 布局与设置蒙版
+    ///
+    /// - Parameter bkView: 背景View
+    fileprivate func layoutNewbackgroundView(bkView: UIView) {
         
         newBottonView   = HFAlertBkView(delegate: self)
         newTopView      = HFAlertBkView(delegate: self)
@@ -172,7 +228,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         bkView.addSubview(newLeftView!)
         bkView.addSubview(newRightView!)
         
-        
+
         newBottonView!.frame     = CGRect.init(x: 0, y: self.view.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height-self.view.frame.maxY)
         newTopView!.frame        = CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: self.view.frame.origin.y)
         newLeftView!.frame       = CGRect(x:0, y:self.view.frame.origin.y,width: self.view.frame.origin.x, height:self.view.frame.size.height)
@@ -181,27 +237,55 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         
     }
     
-    /**
-     蒙版点击回调
-     */
-    internal func touchCallBack() {
+    
+    /// 添加弹窗动画
+    ///
+    /// - Parameters:
+    ///   - view: 需要添加动画的View
+    ///   - animation: 动画类型枚举
+    fileprivate class func alertAnimation(view: UIView,animation: HFAlertAnimationOption) {
+        
+        let popAnimation: CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform")
+        var values: [NSValue]
+        var timingFunctions: [CAMediaTimingFunction]
+        
+        
+        switch animation {
+        case .System:
+            values = [NSValue(caTransform3D: CATransform3DMakeScale(1.2, 1.2, 1.0)),
+                      NSValue(caTransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+                      NSValue(caTransform3D: CATransform3DIdentity)]
+            timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear),
+                               CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)]
+            
+        case .Elasticity:
+            values = [NSValue(caTransform3D: CATransform3DMakeScale(0.01, 0.01, 1.0)),
+                      NSValue(caTransform3D: CATransform3DMakeScale(1.1, 1.1, 1.0)),
+                      NSValue(caTransform3D: CATransform3DMakeScale(0.9, 0.9, 1.0)),
+                      NSValue(caTransform3D: CATransform3DIdentity)]
+            timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut),
+                               CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut),
+                               CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
+        }
+        
+        popAnimation.duration        = 0.4
+        popAnimation.values          = values
+        popAnimation.keyTimes        = [0.0,0.5,0.75,1.0]
+        popAnimation.timingFunctions = timingFunctions
+
+        
+        view.layer.add(popAnimation, forKey: nil)
+    }
+    
+    
+    /// 蒙版点击回调
+    func touchCallBack() {
         if self.isAllowedCancel == true {
             self.dismiss(animated: true, completion: nil)
-            self.removeAllMasking()
         }
     }
     
-    /// 移除所有蒙版
-    private func removeAllMasking() {
-        self.newTopView?.removeFromSuperview()
-        self.newLeftView?.removeFromSuperview()
-        self.newRightView?.removeFromSuperview()
-        self.newBottonView?.removeFromSuperview()
-        self.newTopView = nil
-        self.newLeftView = nil
-        self.newRightView = nil
-        self.newBottonView = nil
-    }
+    
     
 }
 
@@ -209,14 +293,26 @@ protocol HFAlertBkViewDelegate: class {
     func touchCallBack()
 }
 
-class HFAlertBkView: UIView {
+fileprivate class HFAlertBkView: UIView {
     
-    weak var bkViewDelegate: HFAlertBkViewDelegate?
+    fileprivate weak var bkViewDelegate: HFAlertBkViewDelegate?
     
-    init(delegate: HFAlertBkViewDelegate) {
+    init(delegate: HFAlertBkViewDelegate?) {
         
         super.init(frame: CGRect.null)
         self.bkViewDelegate = delegate
+        
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    fileprivate class func fullBackground() -> HFAlertBkView {
+        
+        let obj = HFAlertBkView(frame: UIScreen.main.bounds)
+        obj.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
+        return obj
         
     }
     
@@ -228,9 +324,18 @@ class HFAlertBkView: UIView {
         if self.bkViewDelegate != nil {
             self.bkViewDelegate?.touchCallBack()
             self.removeFromSuperview()
+        }else {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.alpha = 0
+            }, completion: { (_) in
+                self.removeFromSuperview()
+            })
         }
+        
     }
     
     
 }
+
+
 

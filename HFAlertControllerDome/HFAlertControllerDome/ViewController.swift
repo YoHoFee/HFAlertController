@@ -23,20 +23,23 @@ class ViewController: UIViewController {
     @IBAction func clickOnButton(_ sender: UIButton) {
         switch sender.tag {
         case 0:
-            HFAlertController.showAlertController(controller: self, title: "标题", message: "点击背景可取消弹窗", yesCallBack: nil, cancelCallBack: nil)
-            break
+            HFAlertController.showAlert(title: "标题", message: "点击背景可取消弹窗", ConfirmCallBack: nil)
         case 1:
-            HFAlertController.showSheetAlertController(controller: self, title: "标题", message: "点击背景可取消弹窗", yesCallBack: nil, cancelCallBack: nil)
-            break
+            HFAlertController.showAlert(type: .ActionSheet, title: "标题", message: "点击背景可取消弹窗", ConfirmCallBack: nil)
         case 2:
-            HFAlertController.showOneBtnAlertController(controller: self, title: "标题", message: "无取消按钮弹窗不可点击背景取消", yesCallBack: nil)
-            break
+            HFAlertController.showAlert(type: .OnlyConfirm, title: "标题", message: "无取消按钮弹窗不可点击背景取消", ConfirmCallBack: nil)
+        case 3:
+            let view = UIView(frame: CGRect.init(x: 100, y: 100, width: 100, height: 100))
+            view.backgroundColor = UIColor.blue
+            HFAlertController.showCustomView(view: view)
         default: break
         
         }
         
         
     }
+    
+    
 
 }
 
