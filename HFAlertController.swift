@@ -14,6 +14,7 @@ import UIKit
 /// - Default: 默认弹窗
 /// - ActionSheet: 底部弹窗
 /// - OnlyConfirm: 只可确认的默认弹窗
+/// - AccountAction: 带账户输入框的弹窗（该样式在自定义弹窗中不可用）
 @objc enum HFAlertType: Int {
     
     case Default
@@ -21,6 +22,8 @@ import UIKit
     case ActionSheet
     
     case OnlyConfirm
+    
+    case AccountAction
     
 }
 
@@ -80,6 +83,8 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
                 HFAlertController.alertAnimation(view: customView, animation: .SheetExit)
             }
         case .OnlyConfirm: break
+        case .AccountAction: break
+            
         }
         
         windouw.addSubview(bkView)
@@ -103,17 +108,26 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - message: 提示框内容
     ///   - ConfirmCallBack: 完成回调
     @discardableResult
-    open class func showAlert(type:HFAlertType? = .Default, title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
+    open class func showAlert(type:HFAlertType? = .Default, title: String, message: String, ConfirmCallBack:((_ account: String?, _ password:String?) -> Void)?) -> HFAlertController {
         
         var alertController: HFAlertController
         
         switch type! {
         case HFAlertType.Default:
-            alertController = HFAlertController.alertController(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+            alertController = HFAlertController.alertController(title: title, message: message, ConfirmCallBack: {
+                ConfirmCallBack?(nil,nil)
+            })
+
         case HFAlertType.ActionSheet:
-            alertController = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,ConfirmCallBack: ConfirmCallBack)
+            alertController = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet, ConfirmCallBack: {
+                 ConfirmCallBack?(nil,nil)
+            })
         case HFAlertType.OnlyConfirm:
-            alertController = HFAlertController.alertControllerByOnlyConfirm(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+            alertController = HFAlertController.alertControllerByOnlyConfirm(title: title, message: message, ConfirmCallBack: {
+                ConfirmCallBack?(nil,nil)
+            })
+        case .AccountAction:
+            alertController = HFAlertController.alertControllerByAccount(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
         }
         
         if self.currentDisplayViewController != nil {
@@ -194,6 +208,47 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         }
         alertController.addAction(yesAction)
         alertController.isAllowedCancel = false
+        return alertController
+    }
+    
+    
+    // MARK: 创建一个带账户密码输入框的弹窗
+    /// 创建一个带账户密码输入框的弹窗
+    ///
+    /// - Parameters:
+    ///   - title: 标题文本
+    ///   - message: 弹框内容
+    ///   - ConfirmCallBack: 确定按钮回调
+    /// - Returns: return value description
+    open class func alertControllerByAccount(title: String, message: String, ConfirmCallBack:((_ account: String, _ password: String) -> Void)?) -> HFAlertController {
+        
+        let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "请输入账号"
+            textField.textColor = UIColor.black
+            textField.clearButtonMode = .whileEditing
+            textField.borderStyle = .roundedRect
+            textField.returnKeyType = .next
+        }
+        alertController.addTextField { (textField) in
+            textField.placeholder = "请输入密码"
+            textField.textColor = UIColor.black
+            textField.clearButtonMode = .whileEditing
+            textField.borderStyle = .roundedRect
+            textField.isSecureTextEntry = true
+            textField.returnKeyType = .done
+        }
+        
+        let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (action) in
+            
+            let accountTextField: UITextField = alertController.textFields![0]
+            let passwordTextField: UITextField = alertController.textFields![1]
+            if ConfirmCallBack != nil {
+                ConfirmCallBack!(accountTextField.text!, passwordTextField.text!)
+            }
+        }
+        alertController.addAction(yesAction)
         return alertController
     }
     

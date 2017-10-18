@@ -14,7 +14,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
-    let tableViewTitles: [String] = ["默认弹窗","底部弹窗","仅确认按钮弹窗","自定义弹窗","自定义底部弹窗","仅确认自定义底部弹窗"]
+    let tableViewTitles: [String] = ["默认弹窗","底部弹窗","仅确认按钮弹窗","账户输入弹框","自定义弹窗","自定义底部弹窗","仅确认自定义底部弹窗"]
     let Identifier = "Identifier"
     
     override func viewDidLoad() {
@@ -33,7 +33,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 7
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -45,7 +45,8 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
             cell.contentView.backgroundColor = UIColor.white
         }
         cell.textLabel?.text = self.tableViewTitles[indexPath.row]
-        if indexPath.row == 5 {
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
+        if indexPath.row == 6 {
             let line = UIView(frame: CGRect.init(x: 0, y: 55, width: tableView.frame.size.width, height: 1))
             line.backgroundColor = UIColor.groupTableViewBackground
             cell.contentView.addSubview(line)
@@ -63,12 +64,16 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         case 2:
             HFAlertController.showAlert(type: .OnlyConfirm, title: "标题", message: "无取消按钮弹窗不可点击背景取消", ConfirmCallBack: nil)
         case 3:
+            HFAlertController.showAlert(type: .AccountAction, title: "标题", message: "这是内容", ConfirmCallBack: { (account, password) in
+                print("用户输入了账号：" + account! + "\n用户输入了密码：" + password!)
+            })
+        case 4:
             let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 280, height: 130))
             HFAlertController.showCustomView(view: view)
-        case 4:
+        case 5:
             let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 355, height: 200))
             HFAlertController.showCustomView(view: view, type: .ActionSheet)
-        case 5:
+        case 6:
             let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 280, height: 130))
             view.backButton.isHidden = false
             view.label.text = "不可点击背景取消，请创建一个按钮并调用返回的闭包进行关闭"
