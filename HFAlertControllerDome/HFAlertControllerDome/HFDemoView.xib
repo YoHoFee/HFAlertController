@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HFDemoView" customModule="HFAlertControllerDome" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="自定义View" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNM-6n-aCe">
+                    <rect key="frame" x="15" y="323" width="345" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4EL-W7-QWJ">
+                    <rect key="frame" x="15" y="344" width="345" height="323"/>
+                    <state key="normal" title="返回"/>
+                    <connections>
+                        <action selector="backButtonClickCallBack:" destination="iN0-l3-epB" eventType="touchUpInside" id="FNF-2L-oCB"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="QNM-6n-aCe" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Cdk-Ub-KOq"/>
+                <constraint firstAttribute="trailing" secondItem="QNM-6n-aCe" secondAttribute="trailing" constant="15" id="S1O-cW-qBd"/>
+                <constraint firstAttribute="trailing" secondItem="4EL-W7-QWJ" secondAttribute="trailing" constant="15" id="Sks-jt-gaz"/>
+                <constraint firstItem="QNM-6n-aCe" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="WSr-2p-ciu"/>
+                <constraint firstAttribute="bottom" secondItem="4EL-W7-QWJ" secondAttribute="bottom" id="j1S-u7-eew"/>
+                <constraint firstItem="4EL-W7-QWJ" firstAttribute="top" secondItem="QNM-6n-aCe" secondAttribute="bottom" id="ji5-Az-DzC"/>
+                <constraint firstItem="QNM-6n-aCe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="qNU-0a-LTp"/>
+                <constraint firstItem="4EL-W7-QWJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="wrP-bk-weE"/>
+            </constraints>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="10"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="backButton" destination="4EL-W7-QWJ" id="YoA-P4-fma"/>
+                <outlet property="label" destination="QNM-6n-aCe" id="WXA-t0-NPA"/>
+            </connections>
+        </view>
+    </objects>
+</document>

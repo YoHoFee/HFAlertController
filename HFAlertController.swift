@@ -26,61 +26,75 @@ import UIKit
 
 /// 弹出动画枚举
 ///
-/// - System: 仿系统弹出样式（默认）
-/// - Elasticity: 弹力样式
+/// - System:       仿系统弹出样式（默认）
+/// - Elasticity:   弹力样式
+/// - Sheet:        仿系统底部弹窗样式
+/// - SheetExit:    仿系统底部弹窗退出动画
 @objc enum HFAlertAnimationOption: Int {
     
     case System
     
     case Elasticity
     
+    case Sheet
+    
+    case SheetExit
+    
 }
 
 /// 对系统弹窗控制器进行封装，实现背景点击返回
 class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
-    
-    
-    /// 当前显示的控制器
-    fileprivate class var currentDisplayViewController: UIViewController? {
-        get{ return HFAlertController.currentViewController() }
-    }
-    fileprivate var currentDisplayViewControllerCache: UIViewController?
-    /// 底部蒙版
-    fileprivate var newBottonView:  HFAlertBkView?
-    /// 头部蒙版
-    fileprivate var newTopView:     HFAlertBkView?
-    /// 左边蒙版
-    fileprivate var newLeftView:    HFAlertBkView?
-    /// 右边蒙版
-    fileprivate var newRightView:   HFAlertBkView?
-    /// 是否允许取消
-    fileprivate var isAllowedCancel: Bool = true
-    
-    
 
+
+    // MARK: - 快速弹出方法 -
     
+    
+    // MARK: 弹出自定义弹窗
     /// 弹出自定义弹窗
     ///
     /// - Parameters:
     ///   - view: 需要弹出的View
     ///   - type: 提示框类型
-    open class func showCustomView(view: UIView,type: HFAlertType? = .Default) {
+    @discardableResult
+    open class func showCustomView(view customView: UIView,type: HFAlertType? = .Default) -> (() -> Void)? {
         
-        if let windouw = UIApplication.shared.keyWindow {
-            
-            let bkView = HFAlertBkView.fullBackground()
-            bkView.addSubview(view)
-            bkView.alpha = 0
-            windouw.addSubview(bkView)
-            HFAlertController.alertAnimation(view: view, animation: .System)
-            UIView.animate(withDuration: 0.25, animations: {
-                bkView.alpha = 1
-            })
+        guard let windouw = UIApplication.shared.keyWindow else {
+            print(print("HFAlertController_ErrerMsg = ”Window为空，无法弹出自定义弹窗“"))
+            return nil
         }
         
+        let bkView: HFAlertBkView
+        var animation: HFAlertAnimationOption = .System
+        
+        bkView                = HFAlertBkView.fullBackground()
+        bkView.alpha          = 0
+        customView.center     = windouw.center
+        
+        switch type! {
+        case .Default:
+            bkView.setupFullBkButton()
+        case .ActionSheet:
+            animation = .Sheet
+            bkView.setupFullBkButton()
+            bkView.willExitCallBack = {
+                HFAlertController.alertAnimation(view: customView, animation: .SheetExit)
+            }
+        case .OnlyConfirm: break
+        }
+        
+        windouw.addSubview(bkView)
+        bkView.addSubview(customView)
+        
+        HFAlertController.alertAnimation(view: customView, animation: animation)
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            bkView.alpha = 1
+        })
+        
+        return bkView.exitBkView
+        
     }
-    
-    
+    // MARK: 弹出默认提示框
     /// 弹出默认提示框
     ///
     /// - Parameters:
@@ -99,7 +113,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         case HFAlertType.ActionSheet:
             alertController = HFAlertController.alertController(title: title, message: message, preferredStyle: .actionSheet ,ConfirmCallBack: ConfirmCallBack)
         case HFAlertType.OnlyConfirm:
-            alertController = HFAlertController.oneBtnAlertController(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+            alertController = HFAlertController.alertControllerByOnlyConfirm(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
         }
         
         if self.currentDisplayViewController != nil {
@@ -113,6 +127,10 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
 
     
     
+    // MARK: - 快速创建方法 -
+    
+    
+    // MARK: 创建一个默认的提示框
     /// 创建一个默认的提示框
     ///
     /// - Parameters:
@@ -135,9 +153,8 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         
         return alertController
     }
-    
-    
-    /// 自定义确定按钮文本的弹出窗
+    // MARK: 创建一个自定义确定按钮文本的弹出窗
+    /// 创建一个自定义确定按钮文本的弹出窗
     ///
     /// - Parameters:
     ///   - title: 标题文本
@@ -159,16 +176,15 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         
         return alertController
     }
-    
-    
-    /// 只有一个确定按钮的弹框（没有取消按钮）
+    // MARK: 创建一个只可确定的弹框
+    /// 创建一个只可确定的弹框（没有取消按钮）
     ///
     /// - Parameters:
     ///   - title: 标题文本
     ///   - message: 弹框内容
     ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    open class func oneBtnAlertController(title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
+    open class func alertControllerByOnlyConfirm(title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
         
         let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
@@ -180,6 +196,30 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         alertController.isAllowedCancel = false
         return alertController
     }
+    
+    
+    
+    // MARK: - 私有属性 -
+    
+    
+    /// 当前显示的控制器
+    fileprivate class var currentDisplayViewController: UIViewController? {
+        get{ return HFAlertController.currentViewController() }
+    }
+    fileprivate var currentDisplayViewControllerCache: UIViewController?
+    /// 底部蒙版
+    fileprivate var newBottonView:  HFAlertBkView?
+    /// 头部蒙版
+    fileprivate var newTopView:     HFAlertBkView?
+    /// 左边蒙版
+    fileprivate var newLeftView:    HFAlertBkView?
+    /// 右边蒙版
+    fileprivate var newRightView:   HFAlertBkView?
+    /// 是否允许取消
+    fileprivate var isAllowedCancel: Bool = true
+    
+    
+    // MARK: - 私有方法 -
     
     
     /// 获取当前显示的控制器
@@ -198,8 +238,6 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         }
         return base
     }
-    
-
     /// 仅在此方法中可获取AlertView的大小
     ///
     /// - Parameter animated: -
@@ -211,8 +249,6 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         self.layoutNewbackgroundView(bkView: bkView)
         
     }
-    
-    
     /// 布局与设置蒙版
     ///
     /// - Parameter bkView: 背景View
@@ -236,8 +272,6 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         
         
     }
-    
-    
     /// 添加弹窗动画
     ///
     /// - Parameters:
@@ -249,14 +283,18 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         var values: [NSValue]
         var timingFunctions: [CAMediaTimingFunction]
         
-        
         switch animation {
+            
         case .System:
             values = [NSValue(caTransform3D: CATransform3DMakeScale(1.2, 1.2, 1.0)),
-                      NSValue(caTransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
-                      NSValue(caTransform3D: CATransform3DIdentity)]
+                      NSValue(caTransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0))]
             timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear),
                                CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)]
+            popAnimation.duration        = 0.4
+            popAnimation.values          = values
+            popAnimation.keyTimes        = [0.0,0.5,0.75,1.0]
+            popAnimation.timingFunctions = timingFunctions
+            view.layer.add(popAnimation, forKey: nil)
             
         case .Elasticity:
             values = [NSValue(caTransform3D: CATransform3DMakeScale(0.01, 0.01, 1.0)),
@@ -266,18 +304,32 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
             timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut),
                                CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut),
                                CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
+            popAnimation.duration        = 0.4
+            popAnimation.values          = values
+            popAnimation.keyTimes        = [0.0,0.5,0.75,1.0]
+            popAnimation.timingFunctions = timingFunctions
+            view.layer.add(popAnimation, forKey: nil)
+            
+        case .Sheet:
+            var frame = view.frame
+            frame.origin.y = UIScreen.main.bounds.maxY + (view.frame.height)
+            view.frame = frame
+            let newFrame = CGRect(x: frame.origin.x, y: UIScreen.main.bounds.maxY - (view.frame.height) - 10, width: frame.width, height: frame.height)
+            
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 2, options: .curveLinear, animations: {
+                view.frame = newFrame
+                
+            }, completion: nil)
+            
+        case .SheetExit:
+            var newFrame = view.frame
+            newFrame.origin.y = UIScreen.main.bounds.maxY + (view.frame.height)
+            UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 2, options: .curveLinear, animations: {
+                view.frame = newFrame
+            }, completion: nil)
         }
         
-        popAnimation.duration        = 0.4
-        popAnimation.values          = values
-        popAnimation.keyTimes        = [0.0,0.5,0.75,1.0]
-        popAnimation.timingFunctions = timingFunctions
-
-        
-        view.layer.add(popAnimation, forKey: nil)
     }
-    
-    
     /// 蒙版点击回调
     func touchCallBack() {
         if self.isAllowedCancel == true {
@@ -293,9 +345,24 @@ protocol HFAlertBkViewDelegate: class {
     func touchCallBack()
 }
 
+
+/// 背景View
 fileprivate class HFAlertBkView: UIView {
     
     fileprivate weak var bkViewDelegate: HFAlertBkViewDelegate?
+    
+    /// 背景View是否响应点击事件（选择不影响子控件的响应）
+    private var isResponseEvent: Bool = true
+    
+    /// 用于响应事件的按钮
+    fileprivate var fullBkButton: UIButton?
+    
+    /// 退出背景View的闭包，用于外界调用退出
+    private(set) var exitBkView: (() -> Void)?
+    
+    /// 即将推出时会调用该闭包
+    fileprivate var willExitCallBack: (() -> Void)?
+    
     
     init(delegate: HFAlertBkViewDelegate?) {
         
@@ -308,11 +375,21 @@ fileprivate class HFAlertBkView: UIView {
         super.init(frame: frame)
     }
     
+    
+    /// 创建一个使用按钮事件的完整的背景View，用于自定义弹窗
+    ///
+    /// - Returns: HFAlertBkView
     fileprivate class func fullBackground() -> HFAlertBkView {
         
-        let obj = HFAlertBkView(frame: UIScreen.main.bounds)
-        obj.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
-        return obj
+        let bkView = HFAlertBkView(frame: UIScreen.main.bounds)
+        bkView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
+        bkView.isResponseEvent = false
+        
+        bkView.exitBkView = { () in
+            bkView.exit()
+        }
+        
+        return bkView
         
     }
     
@@ -320,19 +397,58 @@ fileprivate class HFAlertBkView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// 设置背景按钮
+    fileprivate func setupFullBkButton() {
+        
+        let bkButton: UIButton
+        bkButton = UIButton(frame: UIScreen.main.bounds)
+        bkButton.addTarget(self, action: #selector(HFAlertBkView.fullBkButtonClickCallBack), for: UIControlEvents.touchUpInside)
+        self.fullBkButton = bkButton
+        self.addSubview(self.fullBkButton!)
+        
+    }
+    
+    
+    /// 重写点击时间处理
+    ///
+    /// - Parameters:
+    ///   - touches: 触摸点
+    ///   - event: 事件
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if self.bkViewDelegate != nil {
+        
+        if self.bkViewDelegate != nil && self.isResponseEvent != false {
             self.bkViewDelegate?.touchCallBack()
             self.removeFromSuperview()
-        }else {
-            UIView.animate(withDuration: 0.25, animations: {
-                self.alpha = 0
-            }, completion: { (_) in
-                self.removeFromSuperview()
-            })
         }
         
     }
+    
+    
+    /// 事件响应按钮的点击回调
+    @objc fileprivate func fullBkButtonClickCallBack() {
+        
+        self.exit()
+
+    }
+    
+    
+    /// 退出背景View
+    fileprivate func exit() {
+        
+        if self.willExitCallBack != nil { self.willExitCallBack!() }
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            self.alpha = 0
+        }, completion: { (_) in
+            self.removeFromSuperview()
+        })
+        
+    }
+    
+    
+
+    
+
     
     
 }

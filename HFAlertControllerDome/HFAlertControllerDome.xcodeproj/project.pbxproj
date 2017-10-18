@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F536A3AE1F8C60EB0054E4E3 /* HFAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536A3AD1F8C60EB0054E4E3 /* HFAlertController.swift */; };
+		F58E0E691F9704E9006761A2 /* HFDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F58E0E681F9704E9006761A2 /* HFDemoView.swift */; };
+		F58E0E6B1F9704FD006761A2 /* HFDemoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58E0E6A1F9704FD006761A2 /* HFDemoView.xib */; };
 		F5A2B4B11F9498C500AEC535 /* CALayer+Test.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A2B4B01F9498C500AEC535 /* CALayer+Test.m */; };
 		F5E9E4C61E8B8E4B002034CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E9E4C51E8B8E4B002034CE /* AppDelegate.swift */; };
 		F5E9E4C81E8B8E4B002034CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E9E4C71E8B8E4B002034CE /* ViewController.swift */; };
@@ -37,6 +39,8 @@
 
 /* Begin PBXFileReference section */
 		F536A3AD1F8C60EB0054E4E3 /* HFAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HFAlertController.swift; path = ../../HFAlertController.swift; sourceTree = "<group>"; };
+		F58E0E681F9704E9006761A2 /* HFDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFDemoView.swift; sourceTree = "<group>"; };
+		F58E0E6A1F9704FD006761A2 /* HFDemoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HFDemoView.xib; sourceTree = "<group>"; };
 		F5A2B4AE1F9498C400AEC535 /* HFAlertControllerDome-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HFAlertControllerDome-Bridging-Header.h"; sourceTree = "<group>"; };
 		F5A2B4AF1F9498C500AEC535 /* CALayer+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CALayer+Test.h"; sourceTree = "<group>"; };
 		F5A2B4B01F9498C500AEC535 /* CALayer+Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Test.m"; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				F5A2B4AF1F9498C500AEC535 /* CALayer+Test.h */,
 				F5A2B4B01F9498C500AEC535 /* CALayer+Test.m */,
 				F5A2B4AE1F9498C400AEC535 /* HFAlertControllerDome-Bridging-Header.h */,
+				F58E0E681F9704E9006761A2 /* HFDemoView.swift */,
+				F58E0E6A1F9704FD006761A2 /* HFDemoView.xib */,
 			);
 			path = HFAlertControllerDome;
 			sourceTree = "<group>";
@@ -245,6 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5E9E4D01E8B8E4B002034CE /* LaunchScreen.storyboard in Resources */,
+				F58E0E6B1F9704FD006761A2 /* HFDemoView.xib in Resources */,
 				F5E9E4CD1E8B8E4B002034CE /* Assets.xcassets in Resources */,
 				F5E9E4CB1E8B8E4B002034CE /* Main.storyboard in Resources */,
 			);
@@ -272,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5E9E4C81E8B8E4B002034CE /* ViewController.swift in Sources */,
+				F58E0E691F9704E9006761A2 /* HFDemoView.swift in Sources */,
 				F5A2B4B11F9498C500AEC535 /* CALayer+Test.m in Sources */,
 				F536A3AE1F8C60EB0054E4E3 /* HFAlertController.swift in Sources */,
 				F5E9E4C61E8B8E4B002034CE /* AppDelegate.swift in Sources */,
