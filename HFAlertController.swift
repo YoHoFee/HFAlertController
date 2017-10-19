@@ -127,7 +127,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
                 ConfirmCallBack?(nil,nil)
             })
         case .AccountAction:
-            alertController = HFAlertController.alertControllerByAccount(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+            alertController = HFAlertController.alertControllerWithAccount(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
         }
         
         if self.currentDisplayViewController != nil {
@@ -220,7 +220,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - message: 弹框内容
     ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    open class func alertControllerByAccount(title: String, message: String, ConfirmCallBack:((_ account: String, _ password: String) -> Void)?) -> HFAlertController {
+    open class func alertControllerWithAccount(title: String, message: String, ConfirmCallBack:((_ account: String, _ password: String) -> Void)?) -> HFAlertController {
         
         let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
