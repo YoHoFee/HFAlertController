@@ -127,7 +127,35 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
                 ConfirmCallBack?(nil,nil)
             })
         case .AccountAction:
-            alertController = HFAlertController.alertControllerByAccount(title: title, message: message, ConfirmCallBack: ConfirmCallBack)
+            
+            let accountTextField = UITextField()
+            let passwordtextField = UITextField()
+            
+            accountTextField.placeholder = "请输入账号"
+            accountTextField.textColor = UIColor.black
+            accountTextField.clearButtonMode = .whileEditing
+            accountTextField.borderStyle = .roundedRect
+            accountTextField.returnKeyType = .next
+            accountTextField.font = UIFont.systemFont(ofSize: 15)
+            
+            passwordtextField.placeholder = "请输入密码"
+            passwordtextField.textColor = UIColor.black
+            passwordtextField.clearButtonMode = .whileEditing
+            passwordtextField.borderStyle = .roundedRect
+            passwordtextField.isSecureTextEntry = true
+            passwordtextField.returnKeyType = .done
+            passwordtextField.font = UIFont.systemFont(ofSize: 15)
+            
+            alertController = HFAlertController.alertControllerWithTextFields(title: title, message: message, textFields: [accountTextField,passwordtextField], ConfirmCallBack: { (textFields) in
+                
+                let accountTextField: UITextField = textFields[0]
+                let passwordTextField: UITextField = textFields[1]
+                if ConfirmCallBack != nil {
+                    ConfirmCallBack!(accountTextField.text!, passwordTextField.text!)
+                }
+                
+            })
+            
         }
         
         if self.currentDisplayViewController != nil {
@@ -220,10 +248,10 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - message: 弹框内容
     ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    open class func alertControllerByAccount(title: String, message: String, ConfirmCallBack:((_ account: String, _ password: String) -> Void)?) -> HFAlertController {
+    open class func alertControllerWithAccount(title: String, message: String, ConfirmCallBack:((_ account: String, _ password: String) -> Void)?) -> HFAlertController {
         
         let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        
+
         alertController.addTextField { (textField) in
             textField.placeholder = "请输入账号"
             textField.textColor = UIColor.black
@@ -239,9 +267,9 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
             textField.isSecureTextEntry = true
             textField.returnKeyType = .done
         }
-        
+
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (action) in
-            
+
             let accountTextField: UITextField = alertController.textFields![0]
             let passwordTextField: UITextField = alertController.textFields![1]
             if ConfirmCallBack != nil {
@@ -250,9 +278,69 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
         }
         alertController.addAction(yesAction)
         return alertController
+        
     }
     
     
+    /// 创建一个带输入框的弹窗
+    ///
+    /// - Parameters:
+    ///   - title: 标题文本
+    ///   - message: 弹框内容
+    ///   - textFields: 输入框数组
+    ///   - ConfirmCallBack: 回调
+    /// - Returns:
+    open class func alertControllerWithTextFields(title: String, message: String,textFields: [UITextField], ConfirmCallBack:((_ textFields: [UITextField]) -> Void)?) -> HFAlertController {
+        
+        let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        for item: UITextField in textFields {
+            alertController.addTextField(configurationHandler: { (textField: UITextField) in
+                
+                textField.placeholder = item.placeholder
+                textField.text = item.text
+                textField.textAlignment = item.textAlignment
+                textField.borderStyle = item.borderStyle
+                textField.textColor = item.textColor
+                textField.font = item.font
+                textField.delegate = item.delegate
+                textField.attributedPlaceholder = item.attributedPlaceholder
+                textField.attributedText = item.attributedText
+                textField.alpha = item.alpha
+                textField.isSecureTextEntry = item.isSecureTextEntry
+                textField.isHidden = item.isHidden
+                textField.isEnabled = item.isEnabled
+                textField.keyboardType = item.keyboardType
+                textField.returnKeyType = item.returnKeyType
+                textField.leftView = item.leftView
+                textField.leftViewMode = item.leftViewMode
+                textField.defaultTextAttributes = item.defaultTextAttributes
+                textField.clearsOnBeginEditing = item.clearsOnBeginEditing
+                textField.minimumFontSize = item.minimumFontSize
+                textField.background = item.background
+                textField.disabledBackground = item.disabledBackground
+                textField.allowsEditingTextAttributes = item.allowsEditingTextAttributes
+                textField.clearButtonMode = item.clearButtonMode
+                textField.clearsOnInsertion = item.clearsOnInsertion
+                textField.rightView = item.rightView
+                textField.rightViewMode = item.rightViewMode
+                textField.adjustsFontSizeToFitWidth = item.adjustsFontSizeToFitWidth
+                if #available(iOS 10.0, *) {
+                    textField.textContentType = item.textContentType
+                } else {
+                    // Fallback on earlier versions
+                }
+                
+            })
+            
+        }
+        let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (action) in
+            ConfirmCallBack?(alertController.textFields!)
+        }
+        alertController.addAction(yesAction)
+        
+        return alertController
+    }
     
     // MARK: - 私有属性 -
     
@@ -391,7 +479,27 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
             self.dismiss(animated: true, completion: nil)
         }
     }
-    
+    /// 获取类的属性列表
+    ///
+    /// - Returns: 属性名字数组
+    class func getPropertyList(className:AnyClass) -> [String] {
+        
+        var count: UInt32 = 0
+//        let list = class_copyPropertyList(className, &count)
+        let list = class_copyIvarList(className, &count)
+        var tempArr:[String] = []
+        
+        for i in 0..<Int(count) {
+            let pty = list?[i]
+            let cName = ivar_getName(pty!)
+            if let name = String(utf8String: cName!) {
+                tempArr.append(name)
+            }
+        }
+        
+        free(list)
+        return tempArr
+    }
     
     
 }
@@ -503,10 +611,10 @@ fileprivate class HFAlertBkView: UIView {
     
 
     
-
-    
     
 }
+
+
 
 
 
