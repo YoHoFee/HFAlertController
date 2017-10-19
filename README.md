@@ -27,7 +27,30 @@
 
 **1.快速弹出默认弹框或底部弹框**
 
-*** 系统弹窗
+### 弹窗类型
+
+``` swift
+/// 弹窗类型枚举
+///
+/// - Default: 默认弹窗
+/// - ActionSheet: 底部弹窗
+/// - OnlyConfirm: 只可确认的默认弹窗
+/// - AccountAction: 带账户输入框的弹窗（该样式在自定义弹窗中不可用）
+@objc enum HFAlertType: Int {
+
+case Default
+
+case ActionSheet
+
+case OnlyConfirm
+
+case AccountAction
+
+}
+```
+
+
+### 系统弹窗
 
 默认弹窗
 
@@ -52,7 +75,7 @@ print("用户输入了账号：" + account! + "\n用户输入了密码：" + pas
 })
 ```
 
-*** 自定义弹窗
+### 自定义弹窗
 
 默认弹窗
 ``` swift
