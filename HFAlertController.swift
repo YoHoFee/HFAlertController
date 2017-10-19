@@ -123,7 +123,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
                  ConfirmCallBack?(nil,nil)
             })
         case HFAlertType.OnlyConfirm:
-            alertController = HFAlertController.alertControllerByOnlyConfirm(title: title, message: message, ConfirmCallBack: {
+            alertController = HFAlertController.alertControllerWithOnlyConfirm(title: title, message: message, ConfirmCallBack: {
                 ConfirmCallBack?(nil,nil)
             })
         case .AccountAction:
@@ -198,7 +198,7 @@ class HFAlertController: UIAlertController, HFAlertBkViewDelegate {
     ///   - message: 弹框内容
     ///   - ConfirmCallBack: 确定按钮回调
     /// - Returns: return value description
-    open class func alertControllerByOnlyConfirm(title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
+    open class func alertControllerWithOnlyConfirm(title: String, message: String, ConfirmCallBack:(() -> Void)?) -> HFAlertController {
         
         let alertController = HFAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         let yesAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
