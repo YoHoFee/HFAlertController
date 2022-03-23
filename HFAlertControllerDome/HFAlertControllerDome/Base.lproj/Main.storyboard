@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeue.ttc">
-            <string>HelveticaNeue</string>
-        </array>
-        <array key="PingFang.ttc">
-            <string>PingFangHK-Light</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -30,21 +20,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9mW-ZS-Ipc">
-                                <rect key="frame" x="0.0" y="200" width="375" height="467"/>
+                                <rect key="frame" x="0.0" y="250" width="375" height="417"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjW-Hn-Boa">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HFAlertController" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1C-1l-lIk">
-                                        <rect key="frame" x="69.5" y="79" width="237.5" height="42"/>
+                                        <rect key="frame" x="69" y="94" width="237.5" height="42"/>
                                         <fontDescription key="fontDescription" name="PingFangHK-Light" family="PingFang HK" pointSize="30"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="version 4.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUY-nA-J4i">
-                                        <rect key="frame" x="146" y="126" width="83.5" height="20"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="version 4.1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUY-nA-J4i">
+                                        <rect key="frame" x="146" y="141" width="83.5" height="20"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="框架内弹出的系统弹窗与原生最大的区别是可以点击背景返回，并且简化了调用流程" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0If-Gn-I4l">
+                                        <rect key="frame" x="40" y="181" width="295" height="31.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -52,9 +48,12 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="FUY-nA-J4i" firstAttribute="top" secondItem="C1C-1l-lIk" secondAttribute="bottom" constant="5" id="D9t-zL-zEg"/>
-                                    <constraint firstAttribute="height" constant="200" id="Otu-lH-q4t"/>
-                                    <constraint firstItem="C1C-1l-lIk" firstAttribute="centerY" secondItem="jjW-Hn-Boa" secondAttribute="centerY" id="dRI-sa-5aA"/>
+                                    <constraint firstAttribute="height" constant="250" id="Otu-lH-q4t"/>
+                                    <constraint firstItem="C1C-1l-lIk" firstAttribute="centerY" secondItem="jjW-Hn-Boa" secondAttribute="centerY" constant="-10" id="dRI-sa-5aA"/>
+                                    <constraint firstItem="0If-Gn-I4l" firstAttribute="leading" secondItem="jjW-Hn-Boa" secondAttribute="leading" constant="40" id="dvn-HV-hRm"/>
+                                    <constraint firstItem="0If-Gn-I4l" firstAttribute="centerX" secondItem="jjW-Hn-Boa" secondAttribute="centerX" id="kDl-nJ-dsT"/>
                                     <constraint firstItem="C1C-1l-lIk" firstAttribute="centerX" secondItem="jjW-Hn-Boa" secondAttribute="centerX" id="obG-2j-doz"/>
+                                    <constraint firstItem="0If-Gn-I4l" firstAttribute="top" secondItem="FUY-nA-J4i" secondAttribute="bottom" constant="20" id="pAX-sR-WWv"/>
                                     <constraint firstItem="FUY-nA-J4i" firstAttribute="centerX" secondItem="jjW-Hn-Boa" secondAttribute="centerX" id="xQ3-c8-4Sw"/>
                                 </constraints>
                             </view>

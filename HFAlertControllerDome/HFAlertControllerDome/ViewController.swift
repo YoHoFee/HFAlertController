@@ -14,7 +14,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
-    let tableViewTitles: [String] = ["默认弹窗","底部弹窗","仅确认按钮弹窗","账户输入弹框","自定义弹窗","自定义底部弹窗","仅确认自定义底部弹窗"]
+    let tableViewTitles: [String] = ["默认弹窗","底部弹窗","仅确认按钮弹窗","账户输入弹框","自定义弹窗","自定义底部弹窗","自定义悬浮底部弹窗","仅确认自定义底部弹窗"]
     let Identifier = "Identifier"
     
     override func viewDidLoad() {
@@ -33,7 +33,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return self.tableViewTitles.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -74,6 +74,9 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
             let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 355, height: 200))
             HFAlertController.showCustomView(view: view, type: .ActionSheet)
         case 6:
+            let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 355, height: 200))
+            HFAlertController.showCustomView(view: view, type: .SheetSuspend)
+        case 7:
             let view = HFDemoView.newInstans(frame: CGRect.init(x: 0, y: 0, width: 280, height: 130))
             view.backButton.isHidden = false
             view.label.text = "不可点击背景取消，请创建一个按钮并调用返回的闭包进行关闭"
